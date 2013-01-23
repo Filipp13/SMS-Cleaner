@@ -72,7 +72,6 @@ public class SmsCleaner extends Activity {
 
 	private ProgressDialog startProgress(String title, String message, int max)
 	{
-		System.out.println("pd");
 		pd = new ProgressDialog(this);
 		pd.setMax(max);
 		pd.setTitle(title);
