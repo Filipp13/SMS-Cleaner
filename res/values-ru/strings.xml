@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">SMS-Cleaner</string>
+    <string name="menu_delete">Удалить найденное</string>
+    <string name="searching_title">Поиск</string>
+    <string name="searching_message">Собираем ненужные смс...</string>
+    <string name="deleting_title">Удаление</string>
+    <string name="deleting_message">Удаляем ненужные смс...</string>
+    <string name="deleted">Удалено</string>
+    <string name="found">Найдено</string>
+    <string name="received">Получено</string>
+
+</resources>
