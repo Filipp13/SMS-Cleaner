@@ -14,26 +14,34 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int list=0x7f070000;
-        public static final int listHeader=0x7f070001;
-        public static final int menu_delete=0x7f070002;
+        public static final int addNewRegexp=0x7f070001;
+        public static final int list=0x7f070002;
+        public static final int listHeader=0x7f070003;
+        public static final int menu_delete=0x7f070004;
+        public static final int menu_settings=0x7f070005;
+        public static final int newRegexp=0x7f070000;
     }
     public static final class layout {
-        public static final int activity_sms_cleaner=0x7f030000;
+        public static final int activity_settings=0x7f030000;
+        public static final int activity_sms_cleaner=0x7f030001;
     }
     public static final class menu {
-        public static final int activity_sms_cleaner=0x7f060000;
+        public static final int activity_settings=0x7f060000;
+        public static final int activity_sms_cleaner=0x7f060001;
     }
     public static final class string {
+        public static final int add=0x7f04000b;
         public static final int app_name=0x7f040000;
         public static final int deleted=0x7f040007;
         public static final int deleting_message=0x7f040005;
         public static final int deleting_title=0x7f040004;
         public static final int found=0x7f040006;
         public static final int menu_delete=0x7f040001;
+        public static final int menu_settings=0x7f04000a;
         public static final int received=0x7f040008;
         public static final int searching_message=0x7f040003;
         public static final int searching_title=0x7f040002;
+        public static final int title_activity_settings=0x7f040009;
     }
     public static final class style {
         /** 
