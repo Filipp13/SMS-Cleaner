@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">SMS-Cleaner</string>
+    <string name="app_name">SMS Cleaner</string>
     <string name="menu_delete">Delete found</string>
     <string name="searching_title">Searching</string>
     <string name="searching_message">Loading unnecessary sms...</string>
@@ -10,5 +10,8 @@
     <string name="found">Found</string>
     <string name="deleted">Deleted</string>
     <string name="received">Received</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="menu_settings">Settings</string>
+    <string name="add">Add</string>
 
 </resources>

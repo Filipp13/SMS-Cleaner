@@ -1,6 +1,7 @@
 package ru.simpra.sms_cleaner;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import android.net.Uri;
@@ -13,31 +14,27 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
+import android.content.Intent;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import ru.simpra.sms_cleaner.SMSCleanerDB;
 
 public class SmsCleaner extends Activity {
 
-	final private String[] regexp = {
-			"Услуга.+Кто Звонил?.+этот абонент звонил Вам \\d+ раз",
-			"Этот абонент снова в сети",
-			"Ваш запрос достален абоненту \\+?\\d+. Осталось запросов: \\d+",
-			"От данного абонента пропущено вызовов \\d+",
-			"Этот абонент доступен для звонка",
-			"Этот абонент звонил.+\\d+ раз",
-			"Этот абонент оставил Вам \\d+ нов(ое|ых) голосов(ое|ых) сообщени(я|е|й)",
-			"Абонент \\+?\\d+ просит Вас.+перезвонить.+",
-			"Абонент \\+?\\d+ не смог Вам дозвониться" };
+	private List<String> regexp = new ArrayList<String>();
 	private ArrayList<String> idList = new ArrayList<String>();
 	private ArrayList<String> smsList = new ArrayList<String>();
 	private int smsQ = 0;
 	private ListView lViewSmS;
 	ArrayAdapter<String> adapter;
 	private ProgressDialog pd;
+	SMSCleanerDB dbh;
 	
 	@SuppressLint("HandlerLeak")
 	private Handler h = new Handler() {
@@ -60,6 +57,13 @@ public class SmsCleaner extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_sms_cleaner);
 		this.lViewSmS = (ListView) findViewById(R.id.list);
+		dbh = new SMSCleanerDB(this);
+		SQLiteDatabase db = dbh.getWritableDatabase();
+		Cursor c = db.query(SMSCleanerDB.DB_TABLE_REGEXPR, new String[] {SMSCleanerDB.DB_COLUMN_NAME_REGEXPR}, null, null, null, null, null);
+		while (c.moveToNext()) {
+			regexp.add(c.getString(0));
+			Log.d("DB",c.getString(0));
+		}
 		fetchSMSList();
 	}
 
@@ -119,12 +123,13 @@ public class SmsCleaner extends Activity {
 		case R.id.menu_delete:
 			deleteFound();
 			return true;
+		case R.id.menu_settings:
+			Intent intent = new Intent(this, SettingsActivity.class);
+		     startActivity(intent);
 		default:
 			return super.onOptionsItemSelected(item);
 		}
 	}
-
-
 
 	public void fetchSMSList() {
 
