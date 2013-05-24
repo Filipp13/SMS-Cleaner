@@ -156,6 +156,7 @@ public class SmsCleaner extends Activity {
 	      				Matcher m = p.matcher(body);
 	      				if (m.find()) {
 	      					String name = getContactDisplayNameByNumber(address);
+	      					if(name == null || name.length() == 0) name = address;
 	      					smsList.add(name + "\n"+getString(R.string.received)+": " + body.substring(0,30)
 	      							+ "...");
 	      					idList.add(_id);
