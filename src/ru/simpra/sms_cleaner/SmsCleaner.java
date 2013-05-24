@@ -35,6 +35,7 @@ public class SmsCleaner extends Activity {
 	ArrayAdapter<String> adapter;
 	private ProgressDialog pd;
 	SMSCleanerDB dbh;
+	SQLiteDatabase db;
 	
 	@SuppressLint("HandlerLeak")
 	private Handler h = new Handler() {
@@ -58,12 +59,8 @@ public class SmsCleaner extends Activity {
 		setContentView(R.layout.activity_sms_cleaner);
 		this.lViewSmS = (ListView) findViewById(R.id.list);
 		dbh = new SMSCleanerDB(this);
-		SQLiteDatabase db = dbh.getWritableDatabase();
-		Cursor c = db.query(SMSCleanerDB.DB_TABLE_REGEXPR, new String[] {SMSCleanerDB.DB_COLUMN_NAME_REGEXPR}, null, null, null, null, null);
-		while (c.moveToNext()) {
-			regexp.add(c.getString(0));
-			Log.d("DB",c.getString(0));
-		}
+		db = dbh.getWritableDatabase();
+		
 		fetchSMSList();
 	}
 
@@ -123,9 +120,13 @@ public class SmsCleaner extends Activity {
 		case R.id.menu_delete:
 			deleteFound();
 			return true;
+		case R.id.menu_refresh:
+			fetchSMSList();
+			return true;
 		case R.id.menu_settings:
-			Intent intent = new Intent(this, SettingsActivity.class);
+			 Intent intent = new Intent(this, SettingsActivity.class);
 		     startActivity(intent);
+		     return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -133,6 +134,13 @@ public class SmsCleaner extends Activity {
 
 	public void fetchSMSList() {
 
+		smsList.clear();
+		idList.clear();
+		regexp.clear();
+		Cursor c = db.query(SMSCleanerDB.DB_TABLE_REGEXPR, new String[] {SMSCleanerDB.DB_COLUMN_NAME_REGEXPR}, null, null, null, null, null);
+		while (c.moveToNext()) {
+			regexp.add(c.getString(0));
+		}
 		Uri uriSms = Uri.parse("content://sms/inbox");
   		final Cursor smsLookup = getContentResolver().query(uriSms,
   				new String[] { "_id", "address", "date", "body" }, null, null,
@@ -156,7 +164,6 @@ public class SmsCleaner extends Activity {
 	      				Matcher m = p.matcher(body);
 	      				if (m.find()) {
 	      					String name = getContactDisplayNameByNumber(address);
-	      					if(name == null || name.length() == 0) name = address;
 	      					smsList.add(name + "\n"+getString(R.string.received)+": " + body.substring(0,30)
 	      							+ "...");
 	      					idList.add(_id);
@@ -174,7 +181,7 @@ public class SmsCleaner extends Activity {
 		Uri uri = Uri.withAppendedPath(
 				ContactsContract.PhoneLookup.CONTENT_FILTER_URI,
 				Uri.encode(number));
-		String name = "?";
+		String name = number;
 
 		ContentResolver contentResolver = getContentResolver();
 		Cursor contactLookup = contentResolver.query(uri, new String[] {

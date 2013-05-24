@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
+        android:layout_below="@+id/add_title_text"
         android:ems="10"
         android:inputType="text" />
 
@@ -20,5 +20,41 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/newRegexp"
         android:text="@string/add" />
+
+    <TextView
+        android:id="@+id/add_title_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:text="@string/add_title"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/all_templates_title_field"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/addNewRegexp"
+        android:layout_centerHorizontal="true"
+        android:text="@string/all_templates_title"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <ListView
+        android:id="@+id/list_templates"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/all_templates_title_field"
+        android:layout_marginTop="39dp" >
+    </ListView>
+
+    <TextView
+        android:id="@+id/templates_list_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/all_templates_title_field"
+        android:layout_centerHorizontal="true"
+        android:text="@string/templates_list_hint_text"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
 </RelativeLayout>

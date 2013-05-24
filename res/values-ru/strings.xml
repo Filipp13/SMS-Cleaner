@@ -13,5 +13,11 @@
     <string name="menu_settings">Настройки</string>
     <string name="title_activity_settings">Настройки</string>
     <string name="add">Добавить</string>
+    <string name="add_title">Добавьте свой шаблон</string>
+    <string name="all_templates_title">Все шаблоны</string>
+    <string name="regexpr_added">Шаблон добавлен</string>
+    <string name="regexpr_deleted">Шаблон удален</string>
+    <string name="templates_list_hint_text">(Долгое нажатие, чтобы удалить шаблон)</string>
+    <string name="menu_refresh">Обновить</string>
 
 </resources>
