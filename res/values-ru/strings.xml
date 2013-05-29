@@ -26,7 +26,7 @@
     <string name="character_alone_help_message_text">Любой символ - %A%</string>
     <string name="character_many_help_message_text">Любая последовательность символов - %A+%</string>
     <string name="example_help_message_text" formatted="false">Таким образом можно использовать шаблон:\n
-<b>+%N%(%N+%)%N+% %A+% %N+% раз</b>
-\nИ это будет отвечать сообщению типа:\n
+<b>+%N%(%N+%)%N+% %A+% %N+% раз</b>\n
+И это будет отвечать сообщению типа:\n
 <b>+7(123)4567890 звонил Вам 50 раз</b></string>
 </resources>
