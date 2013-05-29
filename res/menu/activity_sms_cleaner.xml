@@ -4,8 +4,9 @@
         android:id="@+id/menu_delete"
         android:orderInCategory="100"
         android:showAsAction="ifRoom"
-        android:title="@string/menu_delete"/>
+        android:title="@string/menu_delete" android:menuCategory="system"/>
     <item android:id="@+id/menu_settings" android:menuCategory="system" android:orderInCategory="200" android:title="@string/menu_settings" android:showAsAction="never"></item>
-    <item android:id="@+id/menu_refresh" android:orderInCategory="300" android:title="@string/menu_refresh" android:showAsAction="ifRoom"></item>
+    <item android:id="@+id/menu_refresh" android:orderInCategory="300" android:title="@string/menu_refresh" android:showAsAction="ifRoom" android:menuCategory="system"></item>
+    <item android:id="@id/menu_help" android:orderInCategory="400" android:title="@string/regexp_help" android:menuCategory="system" android:showAsAction="never"></item>
 
 </menu>

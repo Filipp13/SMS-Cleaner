@@ -19,5 +19,15 @@
     <string name="regexpr_deleted">Template deleted</string>
     <string name="templates_list_hint_text">(Long tap on item to delete)</string>
     <string name="menu_refresh">Refresh</string>
+    <string name="wrong_regexp">Wrong template</string>
+    <string name="regexp_help">Help</string>
+    <string name="digit_alone_help_message_text">Any number [0-9] - %N%</string>
+    <string name="digit_many_help_message_text">A sequence of numbers [0-9]. One or more - %N+%</string>
+    <string name="character_alone_help_message_text">Any character - %A%</string>
+    <string name="character_many_help_message_text">A sequnce of characters - %A+%</string>
+    <string name="example_help_message_text" formatted="false">In this case you can use:\n
+<b>+%N%(%N+%)%N+% %A+% %N+% times</b>
+\nAnd this will correspond to message like:\n
+<b>+7(123)4567890 called you 50 times</b></string>
 
 </resources>

@@ -19,5 +19,14 @@
     <string name="regexpr_deleted">Шаблон удален</string>
     <string name="templates_list_hint_text">(Долгое нажатие, чтобы удалить шаблон)</string>
     <string name="menu_refresh">Обновить</string>
-
+    <string name="wrong_regexp">Неправильный шаблон</string>
+    <string name="regexp_help">Помощь</string>
+    <string name="digit_alone_help_message_text">Любая цифра [0-9] - %N%</string>
+    <string name="digit_many_help_message_text">Любая последовательность цифр [0-9]. Одни или более - %N+%</string>
+    <string name="character_alone_help_message_text">Любой символ - %A%</string>
+    <string name="character_many_help_message_text">Любая последовательность символов - %A+%</string>
+    <string name="example_help_message_text" formatted="false">Таким образом можно использовать шаблон:\n
+<b>+%N%(%N+%)%N+% %A+% %N+% раз</b>
+\nИ это будет отвечать сообщению типа:\n
+<b>+7(123)4567890 звонил Вам 50 раз</b></string>
 </resources>

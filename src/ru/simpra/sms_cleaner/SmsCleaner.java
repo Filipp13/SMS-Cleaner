@@ -32,6 +32,7 @@ public class SmsCleaner extends Activity {
 	private ArrayList<String> smsList = new ArrayList<String>();
 	private int smsQ = 0;
 	private ListView lViewSmS;
+	private Pattern p;
 	ArrayAdapter<String> adapter;
 	private ProgressDialog pd;
 	SMSCleanerDB dbh;
@@ -124,8 +125,12 @@ public class SmsCleaner extends Activity {
 			fetchSMSList();
 			return true;
 		case R.id.menu_settings:
-			 Intent intent = new Intent(this, SettingsActivity.class);
-		     startActivity(intent);
+			 Intent intentSettings = new Intent(this, SettingsActivity.class);
+		     startActivity(intentSettings);
+		     return true;
+		case R.id.menu_help:
+			 Intent intentHelp = new Intent(this, HelpActivity.class);
+		     startActivity(intentHelp);
 		     return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -160,12 +165,22 @@ public class SmsCleaner extends Activity {
 	      			String _id = smsLookup.getString(0);
 	      			updateProgress(i);
 	      			for (String s : regexp) {
-	      				Pattern p = Pattern.compile(s);
+	      				try{
+	      					p = Pattern.compile(s);
+	      				
+	      				}
+	      				catch(Exception e)
+	      				{
+	      					continue;
+	      				}
 	      				Matcher m = p.matcher(body);
 	      				if (m.find()) {
 	      					String name = getContactDisplayNameByNumber(address);
-	      					smsList.add(name + "\n"+getString(R.string.received)+": " + body.substring(0,30)
-	      							+ "...");
+	      					if(body.length()>30)
+	      					{
+	      						body = body.substring(0,30) +  "...";
+	      					}
+	      					smsList.add(name + "\n"+getString(R.string.received)+": " + body);
 	      					idList.add(_id);
 	      				}
 	      			}
