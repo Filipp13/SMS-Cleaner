@@ -42,6 +42,7 @@ public class SmsCleaner extends Activity {
 	private Handler h = new Handler() {
         @Override
             public void handleMessage(Message msg) {
+			//testt
         	try
         	{
         		stopProgress();
