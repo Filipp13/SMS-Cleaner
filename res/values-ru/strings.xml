@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="start_message">Начиная с Android 4.4 KitKat доступ к сообщениям может иметь приложение по умолчанию, поэтому нажмите Ок в следующем окне.
+    После очистки, верните приложение по умолчанию обратно</string>
     <string name="app_name">SMS Cleaner</string>
     <string name="menu_delete">Удалить найденное</string>
     <string name="searching_title">Поиск</string>

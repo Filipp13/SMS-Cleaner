@@ -1,11 +1,22 @@
 package ru.simpra.sms_cleaner;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import android.annotation.TargetApi;
+import android.app.AlertDialog;
+import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.BaseColumns;
@@ -17,10 +28,13 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.provider.Telephony;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import ru.simpra.sms_cleaner.SMSCleanerDB;
@@ -37,24 +51,77 @@ public class SmsCleaner extends Activity {
 	private ProgressDialog pd;
 	SMSCleanerDB dbh;
 	SQLiteDatabase db;
-	
+
 	@SuppressLint("HandlerLeak")
 	private Handler h = new Handler() {
-        @Override
-            public void handleMessage(Message msg) {
-			//testt
-        	try
-        	{
-        		stopProgress();
-	        	populateSmSList(smsList);
-        	}
-        	catch(Exception e)
-        	{
-        		stopProgress();
-        	}
-        }
-    };
+		@Override
+		public void handleMessage(Message msg) {
+			try
+			{
+				stopProgress();
+				populateSmSList(smsList);
+			}
+			catch(Exception e)
+			{
+				stopProgress();
+			}
+		}
+	};
 
+	@TargetApi(Build.VERSION_CODES.KITKAT)
+	@Override
+	protected void onResume(){
+		super.onResume();
+		String msg = getResources().getString(R.string.start_message);
+		final String myPackageName = getPackageName();
+		if (!Telephony.Sms.getDefaultSmsPackage(this).equals(myPackageName)) {
+
+			AlertDialog.Builder builder = new AlertDialog.Builder(SmsCleaner.this);
+			builder.setTitle("SMS Cleaner")
+					.setMessage(msg)
+					.setCancelable(false)
+					.setNegativeButton("OK",
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog, int id) {
+									dialog.cancel();
+									Intent intent =
+											new Intent(Telephony.Sms.Intents.ACTION_CHANGE_DEFAULT);
+									intent.putExtra(Telephony.Sms.Intents.EXTRA_PACKAGE_NAME,
+											myPackageName);
+									startActivity(intent);
+								}
+							});
+			AlertDialog alert = builder.create();
+			alert.show();
+
+
+
+
+			/*
+			// App is not default.
+			// Show the "not currently set as the default SMS app" interface
+			View viewGroup = findViewById(R.id.activity_start_message);
+			viewGroup.setVisibility(View.VISIBLE);
+
+			// Set up a button that allows the user to change the default SMS app
+			Button button = (Button) findViewById(R.id.change_default_app);
+			button.setOnClickListener(new View.OnClickListener() {
+				public void onClick(View v) {
+					Intent intent =
+							new Intent(Telephony.Sms.Intents.ACTION_CHANGE_DEFAULT);
+					intent.putExtra(Telephony.Sms.Intents.EXTRA_PACKAGE_NAME,
+							myPackageName);
+					startActivity(intent);
+				}
+			});*/
+		} else {
+			// App is the default.
+			// Hide the "not currently set as the default SMS app" interface
+			//View viewGroup = findViewById(R.id.not_default_app);
+			//viewGroup.setVisibility(View.GONE);
+		}
+
+	}
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -62,10 +129,9 @@ public class SmsCleaner extends Activity {
 		this.lViewSmS = (ListView) findViewById(R.id.list);
 		dbh = new SMSCleanerDB(this);
 		db = dbh.getWritableDatabase();
-		
+
 		fetchSMSList();
 	}
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -89,15 +155,15 @@ public class SmsCleaner extends Activity {
 
 	private void updateProgress(int progress)
 	{
-		  final int j = progress;
-		  runOnUiThread(new Runnable() {
-			  public void run(){
-			  pd.setProgress(j);
-			  }
-		  });   
-		
+		final int j = progress;
+		runOnUiThread(new Runnable() {
+			public void run(){
+				pd.setProgress(j);
+			}
+		});
+
 	}
-	
+
 	private void stopProgress()
 	{
 		pd.dismiss();
@@ -119,22 +185,22 @@ public class SmsCleaner extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		switch (item.getItemId()) {
-		case R.id.menu_delete:
-			deleteFound();
-			return true;
-		case R.id.menu_refresh:
-			fetchSMSList();
-			return true;
-		case R.id.menu_settings:
-			 Intent intentSettings = new Intent(this, SettingsActivity.class);
-		     startActivity(intentSettings);
-		     return true;
-		case R.id.menu_help:
-			 Intent intentHelp = new Intent(this, HelpActivity.class);
-		     startActivity(intentHelp);
-		     return true;
-		default:
-			return super.onOptionsItemSelected(item);
+			case R.id.menu_delete:
+				deleteFound();
+				return true;
+			case R.id.menu_refresh:
+				fetchSMSList();
+				return true;
+			case R.id.menu_settings:
+				Intent intentSettings = new Intent(this, SettingsActivity.class);
+				startActivity(intentSettings);
+				return true;
+			case R.id.menu_help:
+				Intent intentHelp = new Intent(this, HelpActivity.class);
+				startActivity(intentHelp);
+				return true;
+			default:
+				return super.onOptionsItemSelected(item);
 		}
 	}
 
@@ -148,49 +214,49 @@ public class SmsCleaner extends Activity {
 			regexp.add(c.getString(0));
 		}
 		Uri uriSms = Uri.parse("content://sms/inbox");
-  		final Cursor smsLookup = getContentResolver().query(uriSms,
-  				new String[] { "_id", "address", "date", "body" }, null, null,
-  				new String("date ASC"));
-  		smsQ = smsLookup.getCount();
-  		
-  		startProgress(getString(R.string.searching_title), getString(R.string.searching_message), smsQ);
+		final Cursor smsLookup = getContentResolver().query(uriSms,
+				new String[] { "_id", "address", "date", "body" }, null, null,
+				new String("date ASC"));
+		smsQ = smsLookup.getCount();
+
+		startProgress(getString(R.string.searching_title), getString(R.string.searching_message), smsQ);
 
 		Thread thread = new Thread() {
-	          public void run() {
-	      		smsLookup.moveToFirst();
-	      		int i = 1;
-	      		while (smsLookup.moveToNext()) {
-	      			i++;
-	      			String address = smsLookup.getString(1);
-	      			String body = smsLookup.getString(3);
-	      			String _id = smsLookup.getString(0);
-	      			updateProgress(i);
-	      			for (String s : regexp) {
-	      				try{
-	      					p = Pattern.compile(s);
-	      				
-	      				}
-	      				catch(Exception e)
-	      				{
-	      					continue;
-	      				}
-	      				Matcher m = p.matcher(body);
-	      				if (m.find()) {
-	      					String name = getContactDisplayNameByNumber(address);
-	      					if(body.length()>30)
-	      					{
-	      						body = body.substring(0,30) +  "...";
-	      					}
-	      					smsList.add(name + "\n"+getString(R.string.received)+": " + body);
-	      					idList.add(_id);
-	      				}
-	      			}
-	      		}
-	      		smsLookup.close();          
-	      		h.sendEmptyMessage(0);
-	          }
-	      };
-	      thread.start();
+			public void run() {
+				smsLookup.moveToFirst();
+				int i = 1;
+				while (smsLookup.moveToNext()) {
+					i++;
+					String address = smsLookup.getString(1);
+					String body = smsLookup.getString(3);
+					String _id = smsLookup.getString(0);
+					updateProgress(i);
+					for (String s : regexp) {
+						try{
+							p = Pattern.compile(s);
+
+						}
+						catch(Exception e)
+						{
+							continue;
+						}
+						Matcher m = p.matcher(body);
+						if (m.find()) {
+							String name = getContactDisplayNameByNumber(address);
+							if(body.length()>30)
+							{
+								body = body.substring(0,30) +  "...";
+							}
+							smsList.add(name + "\n"+getString(R.string.received)+": " + body);
+							idList.add(_id);
+						}
+					}
+				}
+				smsLookup.close();
+				h.sendEmptyMessage(0);
+			}
+		};
+		thread.start();
 	}
 
 	public String getContactDisplayNameByNumber(String number) {
@@ -201,7 +267,7 @@ public class SmsCleaner extends Activity {
 
 		ContentResolver contentResolver = getContentResolver();
 		Cursor contactLookup = contentResolver.query(uri, new String[] {
-				BaseColumns._ID, ContactsContract.PhoneLookup.DISPLAY_NAME },
+						BaseColumns._ID, ContactsContract.PhoneLookup.DISPLAY_NAME },
 				null, null, null);
 		try {
 			if (contactLookup != null && contactLookup.getCount() > 0) {
@@ -221,16 +287,16 @@ public class SmsCleaner extends Activity {
 	public void deleteFound() {
 		startProgress(getString(R.string.deleting_title), getString(R.string.deleting_message), idList.size());
 		Thread thread = new Thread() {
-	          public void run() {
-	        	  for (int i = 0; i < idList.size(); i++) {
-	      			  getContentResolver().delete(Uri.parse("content://sms/" +
-	      			  idList.get(i)),null,null);
-	      			  updateProgress(i);         
-		          }
-	        	  h.sendEmptyMessage(0);
-	          }
-	      };
-	      thread.start();
-	      smsList = new ArrayList<String>();
+			public void run() {
+				for (int i = 0; i < idList.size(); i++) {
+					getContentResolver().delete(Uri.parse("content://sms/" +
+							idList.get(i)),null,null);
+					updateProgress(i);
+				}
+				h.sendEmptyMessage(0);
+			}
+		};
+		thread.start();
+		smsList = new ArrayList<String>();
 	}
 }

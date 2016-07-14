@@ -37,9 +37,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ru.simpra.sms_cleaner.SettingsActivity" />
         </activity>
+
         <!-- BroadcastReceiver that listens for incoming SMS messages -->
+        <!-- Note the use of android:enabled that is linked to a bool. This will mean this receiver
+             is enabled on KitKat devices and above -->
         <receiver android:name="ru.simpra.sms_cleaner.SmsBroadcastReceiver"
-            android:permission="android.permission.BROADCAST_SMS" android:exported="true">
+            android:enabled="@bool/hasKitKat"
+            android:permission="android.permission.BROADCAST_SMS">
+            <!-- KitKat+ SMS received action -->
             <intent-filter android:priority="999">
                 <action android:name="android.provider.Telephony.SMS_DELIVER" />
             </intent-filter>
